@@ -1,9 +1,8 @@
 from math import fabs
 import random
-
 import numpy as np
 
-class tictactoe(object):
+class Tictactoe(object):
     """
     https://github.com/Zeta36/pytorch-es-tic-tac-toe
     """
@@ -86,23 +85,23 @@ class tictactoe(object):
             return False
 
     def _is_win(self):
-        # check rows
-        board = self.board.reshape(3, 3)
-        for row in range(3):
-            if fabs(np.sum(board[row])) == 3:
+            # check rows
+            board = self.board.reshape(3, 3)
+            for row in range(3):
+                if fabs(np.sum(board[row])) == 3:
+                    return True
+
+            # check rows
+            transpose_board = board.transpose()
+            for column in range(3):
+                if fabs(np.sum(transpose_board[column])) == 3:
+                    return True
+
+            # 2,4,6 and 0,4,8 cases
+            if fabs(self.board[2] + self.board[4] + self.board[6]) == 3:
                 return True
 
-        # check rows
-        transpose_board = board.transpose()
-        for column in range(3):
-            if fabs(np.sum(board[column])) == 3:
+            if fabs(self.board[0] + self.board[4] + self.board[8]) == 3:
                 return True
 
-        # 2,4,6 and 0,4,8 cases
-        if fabs(self.board[2] + self.board[4] + self.board[6]) == 3:
-            return True
-
-        if fabs(self.board[0] + self.board[4] + self.board[8]) == 3:
-            return True
-
-        return False
+            return False
