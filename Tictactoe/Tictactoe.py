@@ -1,5 +1,6 @@
 from math import fabs
 import random
+
 import numpy as np
 
 class Tictactoe(object):
@@ -39,14 +40,15 @@ class Tictactoe(object):
             self.board[action] = 1
 
         # 3 outcomes: draw, player wins, computer's turn
+        
+        # white gets penalized for draw
         if self._is_draw():
             self.done = True
-            print "draw"
-            reward = 0.00001
+            reward = -0.1
             return self.board, reward, self.done
         elif self._is_win():
             self.done = True
-            reward = 10
+            reward = 5
             return self.board, reward, self.done
 
         # not the terminal state, so computer's turn
@@ -59,10 +61,10 @@ class Tictactoe(object):
                 self.done = True
                 reward = -5
                 return self.board, reward, self.done
-            # draw
+            # black gets reward for draw
             if self._is_draw():
                 self.done = True
-                reward = 0.00001
+                reward = 0.1
                 return self.board, reward, self.done
 
         # game continues
@@ -79,29 +81,29 @@ class Tictactoe(object):
     def _is_draw(self):
         """ check if game ended in a draw.
         """
-        if 0 not in self.board and not self._is_win():
+        if (0 not in self.board) and not self._is_win():
             return True
         else:
             return False
 
     def _is_win(self):
-            # check rows
-            board = self.board.reshape(3, 3)
-            for row in range(3):
-                if fabs(np.sum(board[row])) == 3:
-                    return True
-
-            # check rows
-            transpose_board = board.transpose()
-            for column in range(3):
-                if fabs(np.sum(transpose_board[column])) == 3:
-                    return True
-
-            # 2,4,6 and 0,4,8 cases
-            if fabs(self.board[2] + self.board[4] + self.board[6]) == 3:
+        # check rows
+        board = self.board.reshape(3, 3)
+        for row in range(3):
+            if fabs(np.sum(board[row])) == 3:
                 return True
 
-            if fabs(self.board[0] + self.board[4] + self.board[8]) == 3:
+        # check rows
+        transpose_board = board.transpose()
+        for column in range(3):
+            if fabs(np.sum(transpose_board[column])) == 3:
                 return True
 
-            return False
+        # 2,4,6 and 0,4,8 cases
+        if fabs(self.board[2] + self.board[4] + self.board[6]) == 3:
+            return True
+
+        if fabs(self.board[0] + self.board[4] + self.board[8]) == 3:
+            return True
+
+        return False
