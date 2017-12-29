@@ -29,5 +29,14 @@ class TictactoeTest(unittest.TestCase):
         actions = self.env.available_actions()
         assert 8 in actions
 
+    def test_check(self):
+        # taking an action in an occupied spot should result 0 rewards
+        self.env.board = np.array([1,0,0,0,0,0,0,0,0])
+        assert self.env.step(0)[1] == 0
+        assert self.env.step(0)[2] == False
+
+    def test_is_win(self):
+        pass
+
 if __name__ == "__main__":
     unittest.main()

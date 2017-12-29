@@ -4,9 +4,6 @@ import random
 import numpy as np
 
 class Tictactoe(object):
-    """
-    https://github.com/Zeta36/pytorch-es-tic-tac-toe
-    """
 
     def __init__(self):
         self.board = np.zeros(9)
@@ -23,32 +20,27 @@ class Tictactoe(object):
     def sample(self):
         available_positions = self.available_actions()
         return random.choice(available_positions)
-
+    
     def step(self, action):
+        
         # pass if game is completed
-        if self.done:
-            reward = 0
-            return self.board, reward, self.done
-
-        # illegal move: occupied spot
-        if not self._check_valid_move(action):
+        if self.done or not self._check_valid_move(action):
             reward = 0
             return self.board, reward, self.done
 
         # player makes move
-        else:
-            self.board[action] = 1
+        self.board[action] = 1
 
         # 3 outcomes: draw, player wins, computer's turn
         
         # white gets penalized for draw
         if self._is_draw():
             self.done = True
-            reward = -0.1
+            reward = -0.5
             return self.board, reward, self.done
         elif self._is_win():
             self.done = True
-            reward = 5
+            reward = 1
             return self.board, reward, self.done
 
         # not the terminal state, so computer's turn
@@ -59,16 +51,17 @@ class Tictactoe(object):
             # computer wins
             if self._is_win():
                 self.done = True
-                reward = -5
+                reward = -1
                 return self.board, reward, self.done
             # black gets reward for draw
             if self._is_draw():
                 self.done = True
-                reward = 0.1
+                reward = 0.5
                 return self.board, reward, self.done
 
         # game continues
-        return self.board, 0, False
+        reward = -.1  # penalize longer actions
+        return self.board, reward, False
 
     def render(self):
         obs = self.board
