@@ -9,3 +9,11 @@ env = Tictactoe()
 a = env.sample()  # get available action
 s2, r, d = env.step(a)  # move according to action
 ```
+You can visualize board state with render():
+```python
+env.render()
+
+['X' '-' 'O']
+['O' 'X' 'X']
+['-' 'O' '-']
+```
