@@ -7,17 +7,20 @@ class TictactoeTest(unittest.TestCase):
     def setUp(self):  # capitalization matters - https://docs.python.org/2/library/unittest.html#unittest.TestCase.setUp
         self.env = Tictactoe()
 
-    def test_draw(self):
+    def test_win(self):
         self.env.board = np.array([1,1,1,0,0,0,0,0,0])
         assert self.env._is_win() is True
 
         self.env.board = np.array([-1,-1,-1,0,0,0,0,0,0])
         assert self.env._is_win() is True
 
-        self.env.board = np.array([1,0,0,1,0,0,1,0,0])
+        self.env.board = np.array([1,0,0,1,0,0,1,0,0])  # diagonal 0,4,8
         assert self.env._is_win() is True
 
-        self.env.board = np.array([1,0,0,0,1,0,0,0,1])
+        self.env.board = np.array([1,0,0,0,1,0,0,0,1])  # diagonal 0,4,8
+        assert self.env._is_win() is True
+
+        self.env.board = np.array([0,0,1,0,1,0,1,0,0])  # diagonal 2,4,6
         assert self.env._is_win() is True
 
     def test_available_actions(self):
@@ -35,7 +38,7 @@ class TictactoeTest(unittest.TestCase):
         assert self.env.step(0)[1] == 0
         assert self.env.step(0)[2] == False
 
-    def test_is_win(self):
+    def test_draw(self):
         pass
 
 if __name__ == "__main__":

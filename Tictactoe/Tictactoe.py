@@ -8,8 +8,14 @@ class Tictactoe(object):
     def __init__(self):
         self.board = np.zeros(9)
         self.done = False
+        self.reward = {"white_draw":-0.5, 
+                        "white_win":1,
+                        "black_win":-1,
+                        "black_draw":0.5,
+                        "move":0.1
+                       }
 
-    def _check_valid_move(self, action):
+    def _is_valid_move(self, action):
         return self.board[action] == 0
 
     def available_actions(self):
@@ -22,46 +28,31 @@ class Tictactoe(object):
         return random.choice(available_positions)
     
     def step(self, action):
-        
-        # pass if game is completed
-        if self.done or not self._check_valid_move(action):
+        if self.done or not self._is_valid_move(action):
             reward = 0
             return self.board, reward, self.done
-
-        # player makes move
-        self.board[action] = 1
-
-        # 3 outcomes: draw, player wins, computer's turn
         
-        # white gets penalized for draw
+        self.board[action] = 1
+        
         if self._is_draw():
             self.done = True
-            reward = -0.5
-            return self.board, reward, self.done
+            return self.board, self.reward['white_draw'], self.done
         elif self._is_win():
             self.done = True
-            reward = 1
-            return self.board, reward, self.done
-
-        # not the terminal state, so computer's turn
+            return self.board, self.reward['white_win'], self.done
         else:
             move = self.sample()
             self.board[move] = -1
 
-            # computer wins
             if self._is_win():
                 self.done = True
-                reward = -1
-                return self.board, reward, self.done
-            # black gets reward for draw
+                return self.board, self.reward['black_win'], self.done
             if self._is_draw():
                 self.done = True
-                reward = 0.5
-                return self.board, reward, self.done
+                return self.board, self.reward['black_draw'], self.done
 
         # game continues
-        reward = -.1  # penalize longer actions
-        return self.board, reward, False
+        return self.board, self.reward['move'], self.done
 
     def render(self):
         obs = self.board
@@ -95,7 +86,6 @@ class Tictactoe(object):
         # 2,4,6 and 0,4,8 cases
         if fabs(self.board[2] + self.board[4] + self.board[6]) == 3:
             return True
-
         if fabs(self.board[0] + self.board[4] + self.board[8]) == 3:
             return True
 
