@@ -1,19 +1,17 @@
 from math import fabs
 import random
-
 import numpy as np
 
 class Tictactoe(object):
-
-    def __init__(self):
+    
+    def __init__(self, move_penalty=0):
         self.board = np.zeros(9)
         self.done = False
-        self.reward = {"white_draw":-0.5, 
-                        "white_win":1,
-                        "black_win":-1,
-                        "black_draw":0.5,
-                        "move":0.1
-                       }
+        self.reward = {"white_draw": 0,
+                        "white_win": 1,
+                        "black_win": -1,
+                        "black_draw": 0,
+                        "move": move_penalty}
 
     def _is_valid_move(self, action):
         return self.board[action] == 0
@@ -28,6 +26,7 @@ class Tictactoe(object):
         return random.choice(available_positions)
     
     def step(self, action):
+        
         if self.done or not self._is_valid_move(action):
             reward = 0
             return self.board, reward, self.done
@@ -77,7 +76,7 @@ class Tictactoe(object):
             if fabs(np.sum(board[row])) == 3:
                 return True
 
-        # check rows
+        # check cols
         transpose_board = board.transpose()
         for column in range(3):
             if fabs(np.sum(transpose_board[column])) == 3:
