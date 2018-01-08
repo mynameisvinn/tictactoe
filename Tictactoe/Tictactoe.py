@@ -4,52 +4,37 @@ import numpy as np
 
 class Tictactoe(object):
     
-    def __init__(self, move_penalty=0, draw_penalty=0):
+    def __init__(self, move=0, draw=0):
         self.board = np.zeros(9)
         self.done = False
-        self.reward = {"draw_penalty": draw_penalty,
-                        "white_win": 1,
-                        "black_win": -1,
-                        "move_penalty": move_penalty}
+        self.reward = {"move": move, "draw": draw, "win": 1}
 
     def _is_valid_move(self, action):
         return self.board[action] == 0
 
     def available_actions(self):
-        """actions available to player.
-        """
         return [p for p, v in enumerate(self.board) if v == 0]
 
     def sample(self):
         return random.choice(self.available_actions())
     
-    def step(self, action):
+    def step(self, action, player):
         
         if self.done or not self._is_valid_move(action):
             reward = 0
             return self.board, reward, self.done
         
-        self.board[action] = 1
+        self.board[action] = player
         
         if self._is_draw():
             self.done = True
-            return self.board, self.reward['draw_penalty'], self.done
+            return self.board, self.reward['draw'], self.done
         elif self._is_win():
             self.done = True
-            return self.board, self.reward['white_win'], self.done
+            return self.board, self.reward['win'] * player, self.done
         else:
-            move = self.sample()
-            self.board[move] = -1
-
-            if self._is_win():
-                self.done = True
-                return self.board, self.reward['black_win'], self.done
-            if self._is_draw():
-                self.done = True
-                return self.board, self.reward['draw_penalty'], self.done
-
-        # game continues
-        return self.board, self.reward['move_penalty'], self.done
+            reward = 0
+            return self.board, self.reward['move'], self.done
 
     def render(self):
         obs = self.board

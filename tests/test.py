@@ -35,8 +35,8 @@ class TictactoeTest(unittest.TestCase):
     def test_check(self):
         # taking an action in an occupied spot should result 0 rewards
         self.env.board = np.array([1,0,0,0,0,0,0,0,0])
-        assert self.env.step(0)[1] == 0
-        assert self.env.step(0)[2] == False
+        assert self.env.step(0, -1)[1] == 0
+        assert self.env.step(0, -1)[2] == False
 
     def test_draw(self):
         pass
