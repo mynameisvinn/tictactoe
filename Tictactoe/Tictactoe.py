@@ -8,6 +8,7 @@ class Tictactoe(object):
         self.board = np.zeros(9)
         self.done = False
         self.reward = {"move": move, "draw": draw, "win": 1}
+        self.players = {"X": 1, "O": -1}
 
     def _is_valid_move(self, action):
         return self.board[action] == 0
@@ -24,14 +25,14 @@ class Tictactoe(object):
             reward = 0
             return self.board, reward, self.done
         
-        self.board[action] = player
+        self.board[action] = self.players[player]
         
         if self._is_draw():
             self.done = True
             return self.board, self.reward['draw'], self.done
         elif self._is_win():
             self.done = True
-            return self.board, self.reward['win'] * player, self.done
+            return self.board, self.reward['win'] * self.players[player], self.done
         else:
             reward = 0
             return self.board, self.reward['move'], self.done
